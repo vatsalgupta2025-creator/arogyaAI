@@ -1,0 +1,4 @@
+src/components/TopBar.tsx(12,11): error TS6133: 'role' is declared but its value is never read.
+src/hooks/RoleContext.tsx(1,8): error TS6133: 'React' is declared but its value is never read.
+src/pages/PersonalBaseline.tsx(2,1): error TS6192: All imports in import declaration are unused.
+src/pages/SepsisWarning.tsx(2,1): error TS6133: 'motion' is declared but its value is never read.
