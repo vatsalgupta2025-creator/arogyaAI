@@ -1,4 +1,5 @@
-import { n as __commonJSMin, t as require_react } from "./react--WRKu3Vm.js";
+import { t as __commonJSMin } from "./chunk-BoAXSpZd.js";
+import { t as require_react } from "./react.js";
 //#region node_modules/.pnpm/react@19.2.4/node_modules/react/cjs/react-jsx-dev-runtime.development.js
 /**
 * @license React

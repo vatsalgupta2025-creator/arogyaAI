@@ -1,0 +1,11 @@
+patient_id,timestamp,reported_condition
+P-001,2026-01-01 08:00:00,Normal
+P-001,2026-01-01 08:01:00,Normal
+P-001,2026-01-01 08:02:00,Tachycardia Risk
+P-001,2026-01-01 08:03:00,Fever Risk
+P-001,2026-01-01 08:04:00,Hypoxemia Risk
+P-001,2026-01-01 08:05:00,Normal
+P-001,2026-01-01 08:06:00,Fever Risk
+P-001,2026-01-01 08:07:00,Normal
+P-001,2026-01-01 08:08:00,Normal
+P-001,2026-01-01 08:09:00,Hypoxemia Risk

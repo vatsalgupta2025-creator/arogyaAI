@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 import { useRole, Role } from '../hooks/RoleContext';
 import {
   Activity, TrendingUp, Stethoscope, AlertTriangle,
-  FileText, Clock, Users, ShieldCheck, Sliders, ChevronLeft, ChevronRight, Bot
+  FileText, Clock, Users, ShieldCheck, Sliders, ChevronLeft, ChevronRight, Bot, HeartPulse, Pill, Heart, Download, Upload
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -12,8 +12,15 @@ const navItems = [
   { path: '/dashboard/chatbot', label: 'AI Health Copilot', icon: <Bot size={18} /> },
   { path: '/dashboard/diagnosis', label: 'Differential Dx', icon: <Stethoscope size={18} /> },
   { path: '/dashboard/sepsis', label: 'Sepsis Warning', icon: <AlertTriangle size={18} /> },
+  { path: '/dashboard/simple-predict', label: 'Quick Health Check', icon: <HeartPulse size={18} /> },
+  { path: '/dashboard/data-importer', label: 'Data Importer', icon: <Upload size={18} /> },
+  { path: '/dashboard/fetal-monitoring', label: 'Fetal Monitoring', icon: <HeartPulse size={18} /> },
   { path: '/dashboard/reports', label: 'Medical Reports', icon: <FileText size={18} /> },
   { path: '/dashboard/timeline', label: 'Patient Timeline', icon: <Clock size={18} /> },
+  { divider: true },
+  { path: '/dashboard/medications', label: 'Medications', icon: <Pill size={18} /> },
+  { path: '/dashboard/health-score', label: 'Health Score', icon: <Heart size={18} /> },
+  { path: '/dashboard/export', label: 'Export Reports', icon: <Download size={18} /> },
   { divider: true },
   { path: '/dashboard/caregiver', label: 'Caregiver View', icon: <Users size={18} /> },
   { path: '/dashboard/equity', label: 'Equity Audit', icon: <ShieldCheck size={18} /> },

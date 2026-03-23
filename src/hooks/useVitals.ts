@@ -58,26 +58,33 @@ export function useVitals(mode: 'normal' | 'sepsis' = 'sepsis', intervalMs: numb
 
       setHistory(prev => {
         const updated = [...prev.slice(-120), newReading];
-        
+
         // Fetch AI reasoning and anomaly analysis from Python ML backend
         fetch('http://localhost:5000/api/analyze', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ current: newReading, history: updated.slice(-30) })
         })
-        .then(res => res.json())
-        .then(data => {
-          if (data.anomalies) {
-            setAnomalies(data.anomalies);
-            setStabilityScore(data.stability);
-          }
-        })
-        .catch(e => {
-          // Fallback to local logic if ML server unreachable
-          const anom = detectAnomaly(newReading, baseline, newReading.context);
-          setAnomalies(anom);
-          setStabilityScore(calculateStabilityScore(anom));
-        });
+          .then(res => res.json())
+          .then(data => {
+            if (data.anomalies) {
+              setAnomalies(data.anomalies);
+              setStabilityScore(prevScore => {
+                 const target = data.stability;
+                 // Exponential smoothing to prevent rapid fluctuation
+                 return Math.round(prevScore * 0.8 + target * 0.2);
+              });
+            }
+          })
+          .catch(() => {
+            // Fallback to local logic if ML server unreachable
+            const anom = detectAnomaly(newReading, baseline, newReading.context);
+            setAnomalies(anom);
+            setStabilityScore(prevScore => {
+                 const target = calculateStabilityScore(anom);
+                 return Math.round(prevScore * 0.8 + target * 0.2);
+            });
+          });
 
         return updated;
       });

@@ -2,6 +2,7 @@ import { useRole } from '../hooks/RoleContext';
 import { PATIENT } from '../data/patient';
 import { Bell, User } from 'lucide-react';
 import StatusBadge from './StatusBadge';
+import ThemeToggle from './ThemeToggle';
 
 interface TopBarProps {
   stabilityScore: number;
@@ -54,8 +55,9 @@ export default function TopBar({ stabilityScore, alertCount }: TopBarProps) {
         <StatusBadge status={overallStatus} label={`Stability: ${Math.round(stabilityScore)}%`} size="md" />
       </div>
 
-      {/* Right: Alerts + Role */}
+      {/* Right: Alerts + Role + Theme */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <ThemeToggle />
         <div style={{ position: 'relative', cursor: 'pointer' }}>
           <Bell size={20} style={{ color: 'var(--text-secondary)' }} />
           {alertCount > 0 && (

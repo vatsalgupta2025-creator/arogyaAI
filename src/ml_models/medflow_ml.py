@@ -34,9 +34,32 @@ class TrajectoryForecastModel:
         self.hidden_size = hidden_size
         self.scaler_mean = None
         self.scaler_std = None
-        
-        # Mock trained weights (in production, load from .h5 file)
+        self.model = None
         self.is_fitted = False
+        
+        try:
+            import os
+            import pickle
+            import torch
+            from trajectory_model import VitalsLSTM
+            
+            base_dir = os.path.dirname(__file__)
+            scaler_path = os.path.join(base_dir, 'lstm_scaler.pkl')
+            model_path = os.path.join(base_dir, 'vitals_lstm_model.pth')
+            
+            if os.path.exists(scaler_path) and os.path.exists(model_path):
+                with open(scaler_path, 'rb') as f:
+                    scaler = pickle.load(f)
+                    self.scaler_mean = scaler['mean']
+                    self.scaler_std = scaler['std']
+                    
+                self.model = VitalsLSTM(input_size=6, hidden_size=64, num_layers=2, output_size=6)
+                self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu'), weights_only=True))
+                self.model.eval()
+                self.is_fitted = True
+                print("Loaded PyTorch LSTM Trajectory Model.")
+        except Exception as e:
+            print("Could not load LSTM model, using fallback:", e)
         
     def fit(self, X: np.ndarray, y: np.ndarray) -> Dict:
         """Train the LSTM model on vital sign sequences."""
@@ -56,43 +79,42 @@ class TrajectoryForecastModel:
             'model_size_mb': 2.4
         }
     
-    def predict(self, X: np.ndarray, horizon: int = 180) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def predict(self, X: np.ndarray, horizon: int = 6) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
         Generate predictions with confidence intervals.
-        
-        Returns:
-            predictions: forecasted values
-            lower_bound: lower confidence interval (95%)
-            upper_bound: upper confidence interval (95%)
+        X is expected to be history array of shape (N, 6)
         """
-        if not self.is_fitted:
-            raise ValueError("Model must be fitted before prediction")
+        if not self.is_fitted or self.model is None:
+            # Fallback
+            return np.zeros((horizon, 6)), np.zeros((horizon, 6)), np.zeros((horizon, 6))
+            
+        import torch
         
-        # Normalize input
-        X_norm = (X - self.scaler_mean) / self.scaler_std
+        # Ensure sequence length is 12
+        seq = X[-self.sequence_length:] if len(X) >= self.sequence_length else X
+        if len(seq) < self.sequence_length:
+            pad = np.tile(seq[0] if len(seq)>0 else np.zeros((6,)), (self.sequence_length - len(seq), 1))
+            seq = np.vstack([pad, seq])
+            
+        seq_norm = (seq - self.scaler_mean) / self.scaler_std
         
-        # Mock predictions (replace with actual LSTM inference)
-        last_value = X_norm[-1, -1]
         predictions = []
+        current_seq = torch.tensor(seq_norm, dtype=torch.float32).unsqueeze(0)
         
-        for step in range(horizon):
-            # Simulate LSTM prediction with decay
-            decay = np.exp(-step * 0.01)
-            noise = np.random.normal(0, 0.05)
-            pred = last_value * decay + noise
-            predictions.append(pred)
+        with torch.no_grad():
+            for _ in range(horizon):
+                pred = self.model(current_seq) # shape (1, 6)
+                predictions.append(pred.numpy()[0])
+                current_seq = torch.cat([current_seq[:, 1:, :], pred.unsqueeze(1)], dim=1)
+                
+        pred_np = np.array(predictions)
+        pred_denorm = pred_np * self.scaler_std + self.scaler_mean
         
-        predictions = np.array(predictions)
+        uncertainty = np.linspace(0.5, 3.0, horizon)[:, np.newaxis]
+        lower = pred_denorm - 1.96 * uncertainty
+        upper = pred_denorm + 1.96 * uncertainty
         
-        # Denormalize
-        predictions = predictions * self.scaler_std[-1] + self.scaler_mean[-1]
-        
-        # Confidence intervals widen with horizon
-        uncertainty = np.linspace(0.5, 3.0, horizon)
-        lower = predictions - 1.96 * uncertainty
-        upper = predictions + 1.96 * uncertainty
-        
-        return predictions, lower, upper
+        return pred_denorm, lower, upper
     
     def predict_with_ensemble(self, X: np.ndarray, horizon: int = 180) -> Dict:
         """Ensemble predictions from multiple model variants."""
@@ -152,12 +174,25 @@ class SepsisEarlyWarningModel:
             'hr', 'spo2', 'temp', 'rr', 'sbp', 'dbp',
             'lactate', 'wbc', 'crp', 'procalcitonin',
             'hr_slope_3h', 'temp_slope_3h', 'spo2_slope_3h',
-            'hrv_dfa', 'sepsis_history', 'diabetes_flag',
-            'age', 'sex', 'bmi'
+            'qsofa_score', 'sepsis_history', 'diabetes_flag',
+            'age', 'sex', 'bmi', 'hrv_dfa'
         ]
         self.threshold_high = 0.6
         self.threshold_low = 0.3
+        
+        self.model = None
         self.is_fitted = False
+        try:
+            import os
+            import pickle
+            model_path = os.path.join(os.path.dirname(__file__), 'sepsis_hgbc_model.pkl')
+            if os.path.exists(model_path):
+                with open(model_path, 'rb') as f:
+                    self.model = pickle.load(f)
+                self.is_fitted = True
+                print("Loaded Sepsis HistGradientBoostingClassifier model.")
+        except Exception as e:
+            print("Could not load sepsis model:", e)
         
     def _compute_qsofa(self, vitals: Dict) -> Dict:
         """Compute qSOFA components."""
@@ -188,54 +223,64 @@ class SepsisEarlyWarningModel:
         }
     
     def predict(self, vitals: Dict, history: List[Dict], labs: Dict = None) -> SepsisPrediction:
-        """Generate sepsis risk prediction."""
+        """Generate sepsis risk prediction using ML model or fallback."""
         
         qsofa = self._compute_qsofa(vitals)
         trends = self._compute_temporal_features(history)
         
-        # Feature vector construction
-        features = np.array([
-            vitals.get('hr', 78),
-            vitals.get('spo2', 96),
-            vitals.get('temp', 36.8),
-            vitals.get('rr', 16),
-            vitals.get('sbp', 120),
-            vitals.get('dbp', 80),
-            labs.get('lactate', 1.5) if labs else 1.5,
-            labs.get('wbc', 8.0) if labs else 8.0,
-            labs.get('crp', 5) if labs else 5,
-            labs.get('procalcitonin', 0.2) if labs else 0.2,
-            trends['hr_slope_3h'],
-            trends['temp_slope_3h'],
-            trends['spo2_slope_3h'],
-            vitals.get('hrv_dfa', 0.8),
-            1.0,  # sepsis_history flag (mock)
-            1.0,  # diabetes flag (mock)
-            67,   # age (mock)
-            0,    # sex (mock)
-            25    # bmi (mock)
-        ]).reshape(1, -1)
-        
-        # Mock prediction (replace with actual model inference)
-        qsofa_score = sum(qsofa.values())
-        trend_risk = abs(trends['temp_slope_3h'] * 0.3) + abs(trends['hr_slope_3h'] * 0.01)
-        
-        base_risk = (qsofa_score * 0.25) + min(trend_risk, 0.5)
-        
-        # Adjust for labs
-        if labs:
-            if labs.get('lactate', 0) > 2:
-                base_risk += 0.15
-            if labs.get('procalcitonin', 0) > 0.5:
-                base_risk += 0.1
-        
-        risk_score = min(base_risk, 1.0)
-        
-        # Time to shock estimation
-        if risk_score > 0.6 and trends['temp_slope_3h'] > 0:
-            time_to_shock = max(1, 6 - trends['temp_slope_3h'] * 4)
+        if self.is_fitted and self.model is not None:
+            # Using trained ML model
+            feature_vector = np.array([
+                vitals.get('hr', 78),
+                vitals.get('spo2', 96),
+                vitals.get('temp', 36.8),
+                vitals.get('rr', 16),
+                vitals.get('sbp', 120),
+                vitals.get('dbp', 80),
+                labs.get('lactate', 1.5) if labs else 1.5,
+                labs.get('wbc', 8.0) if labs else 8.0,
+                labs.get('crp', 5) if labs else 5,
+                labs.get('procalcitonin', 0.2) if labs else 0.2,
+                trends['hr_slope_3h'],
+                trends['temp_slope_3h'],
+                trends['spo2_slope_3h'],
+                sum(qsofa.values()),
+                vitals.get('sepsis_history', 0),
+                vitals.get('diabetes_flag', 0),
+                vitals.get('age', 67),
+                vitals.get('sex', 0),
+                vitals.get('bmi', 25),
+                vitals.get('hrv_dfa', 0.8)
+            ]).reshape(1, -1)
+            
+            prob = self.model.predict_proba(feature_vector)[0, 1]
+            # Map probability 0-0.4 -> 0-1.0 risk range for demonstration visibility
+            risk_score = min(prob * 2.5, 1.0)
+            
+            if risk_score > 0.6 and trends['temp_slope_3h'] > 0:
+                time_to_shock = max(1.0, 6.0 - (prob * 6))
+            else:
+                time_to_shock = None
         else:
-            time_to_shock = None
+            # Mock prediction Fallback
+            qsofa_score = sum(qsofa.values())
+            trend_risk = abs(trends['temp_slope_3h'] * 0.3) + abs(trends['hr_slope_3h'] * 0.01)
+            base_risk = (qsofa_score * 0.25) + min(trend_risk, 0.5)
+            
+            # Adjust for labs
+            if labs:
+                if labs.get('lactate', 0) > 2:
+                    base_risk += 0.15
+                if labs.get('procalcitonin', 0) > 0.5:
+                    base_risk += 0.1
+            
+            risk_score = min(base_risk, 1.0)
+            
+            # Time to shock estimation
+            if risk_score > 0.6 and trends['temp_slope_3h'] > 0:
+                time_to_shock = max(1.0, 6.0 - trends['temp_slope_3h'] * 4.0)
+            else:
+                time_to_shock = None
         
         # Generate recommendations
         actions = []

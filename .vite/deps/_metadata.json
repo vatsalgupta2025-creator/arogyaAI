@@ -2,12 +2,24 @@
   "hash": "b9da27a8",
   "configHash": "4942658e",
   "lockfileHash": "4eae6fc3",
-  "browserHash": "15ff60f4",
+  "browserHash": "165985b6",
   "optimized": {
     "@google/generative-ai": {
       "src": "../../node_modules/.pnpm/@google+generative-ai@0.24.1/node_modules/@google/generative-ai/dist/index.mjs",
       "file": "@google_generative-ai.js",
       "fileHash": "bfd319ae",
+      "needsInterop": false
+    },
+    "@radix-ui/react-slot": {
+      "src": "../../node_modules/.pnpm/@radix-ui+react-slot@1.2.4_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-slot/dist/index.mjs",
+      "file": "@radix-ui_react-slot.js",
+      "fileHash": "5b55e6bf",
+      "needsInterop": false
+    },
+    "class-variance-authority": {
+      "src": "../../node_modules/.pnpm/class-variance-authority@0.7.1/node_modules/class-variance-authority/dist/index.mjs",
+      "file": "class-variance-authority.js",
+      "fileHash": "ccdf421f",
       "needsInterop": false
     },
     "clsx": {
@@ -19,7 +31,7 @@
     "framer-motion": {
       "src": "../../node_modules/.pnpm/framer-motion@12.38.0_react_c6850c7a3f6ac082229dee387470c1fc/node_modules/framer-motion/dist/es/index.mjs",
       "file": "framer-motion.js",
-      "fileHash": "089c50c5",
+      "fileHash": "bc501082",
       "needsInterop": false
     },
     "hls.js": {
@@ -28,46 +40,52 @@
       "fileHash": "52a555f4",
       "needsInterop": false
     },
+    "jspdf": {
+      "src": "../../node_modules/.pnpm/jspdf@4.2.1/node_modules/jspdf/dist/jspdf.es.min.js",
+      "file": "jspdf.js",
+      "fileHash": "3e5d652a",
+      "needsInterop": false
+    },
     "lucide-react": {
       "src": "../../node_modules/.pnpm/lucide-react@0.577.0_react@19.2.4/node_modules/lucide-react/dist/esm/lucide-react.js",
       "file": "lucide-react.js",
-      "fileHash": "03cafdd2",
+      "fileHash": "01c9c0d0",
       "needsInterop": false
     },
     "react-dom/client": {
       "src": "../../node_modules/.pnpm/react-dom@19.2.4_react@19.2.4/node_modules/react-dom/client.js",
       "file": "react-dom_client.js",
-      "fileHash": "10f664dc",
+      "fileHash": "1e0dfca9",
       "needsInterop": true
     },
     "react-markdown": {
       "src": "../../node_modules/.pnpm/react-markdown@10.1.0_@types+react@19.2.14_react@19.2.4/node_modules/react-markdown/index.js",
       "file": "react-markdown.js",
-      "fileHash": "0f87fed1",
+      "fileHash": "0c76b23e",
       "needsInterop": false
     },
     "react-router-dom": {
       "src": "../../node_modules/.pnpm/react-router-dom@7.13.1_rea_51be5742dbbdbf36bac0195d0bbde42d/node_modules/react-router-dom/dist/index.mjs",
       "file": "react-router-dom.js",
-      "fileHash": "979f8e3a",
+      "fileHash": "c6078ac4",
       "needsInterop": false
     },
     "react": {
       "src": "../../node_modules/.pnpm/react@19.2.4/node_modules/react/index.js",
       "file": "react.js",
-      "fileHash": "f1522121",
+      "fileHash": "0de65bb9",
       "needsInterop": true
     },
     "react/jsx-dev-runtime": {
       "src": "../../node_modules/.pnpm/react@19.2.4/node_modules/react/jsx-dev-runtime.js",
       "file": "react_jsx-dev-runtime.js",
-      "fileHash": "a0561992",
+      "fileHash": "8878b812",
       "needsInterop": true
     },
     "recharts": {
       "src": "../../node_modules/.pnpm/recharts@3.8.0_@types+react_234fbed224700069ae76a3d667c4fc1d/node_modules/recharts/es6/index.js",
       "file": "recharts.js",
-      "fileHash": "415b07ad",
+      "fileHash": "9f780fcd",
       "needsInterop": false
     },
     "tailwind-merge": {
@@ -78,16 +96,32 @@
     }
   },
   "chunks": {
-    "jsx-runtime-DpoVkmHq": {
-      "file": "jsx-runtime-DpoVkmHq.js",
+    "chunk-BoAXSpZd": {
+      "file": "chunk-BoAXSpZd.js",
       "isDynamicEntry": false
     },
-    "react--WRKu3Vm": {
-      "file": "react--WRKu3Vm.js",
+    "html2canvas-BfrJezQx": {
+      "file": "html2canvas-BfrJezQx.js",
+      "isDynamicEntry": true
+    },
+    "index.es-eKBoIPen": {
+      "file": "index.es-eKBoIPen.js",
+      "isDynamicEntry": true
+    },
+    "jsx-runtime-Cb3sWpBT": {
+      "file": "jsx-runtime-Cb3sWpBT.js",
       "isDynamicEntry": false
     },
-    "react-dom-j8pl7fDK": {
-      "file": "react-dom-j8pl7fDK.js",
+    "purify.es-DBMrrGPb": {
+      "file": "purify.es-DBMrrGPb.js",
+      "isDynamicEntry": true
+    },
+    "react-dom-BpWXWKs8": {
+      "file": "react-dom-BpWXWKs8.js",
+      "isDynamicEntry": false
+    },
+    "typeof-Ch8kh2D9": {
+      "file": "typeof-Ch8kh2D9.js",
       "isDynamicEntry": false
     }
   }

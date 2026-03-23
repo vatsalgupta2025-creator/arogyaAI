@@ -2,15 +2,28 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
 import { useVitals } from '../hooks/useVitals';
+import { FLOWER_VIDEO_URL } from './LoadingScreen';
+import EmergencyAlert from './EmergencyAlert';
+import QuickActions from './QuickActions';
+import { useNavigate } from 'react-router-dom';
 
 export default function DashboardLayout() {
   const vitals = useVitals('sepsis', 2000);
+  const navigate = useNavigate();
 
   const alertCount = vitals.anomalies.filter(a => a.severity !== 'normal').length;
 
+  const handleEmergencyTrigger = () => {
+    navigate('/dashboard/sepsis');
+  };
+
+  const handleOpenChatbot = () => {
+    navigate('/dashboard/chatbot');
+  };
+
   return (
     <div style={{ display: 'flex', minHeight: '100vh', position: 'relative', background: 'var(--bg-primary)' }}>
-      {/* Background */}
+      {/* Flower Video Background */}
       <div
         style={{
           position: 'fixed',
@@ -23,11 +36,20 @@ export default function DashboardLayout() {
           pointerEvents: 'none'
         }}
       >
+        <video
+          src={FLOWER_VIDEO_URL}
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.15 }}
+          onError={(e) => { (e.target as HTMLVideoElement).style.display = 'none'; }}
+        />
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(135deg, rgba(6, 10, 20, 0.95) 0%, rgba(12, 18, 34, 0.9) 100%)',
+            background: 'linear-gradient(135deg, rgba(6, 10, 20, 0.92) 0%, rgba(12, 18, 34, 0.88) 100%)',
           }}
         />
       </div>
@@ -52,6 +74,8 @@ export default function DashboardLayout() {
         }}>
           <Outlet context={vitals} />
         </main>
+        <EmergencyAlert onEmergencyTrigger={handleEmergencyTrigger} />
+        <QuickActions onOpenChatbot={handleOpenChatbot} onOpenEmergency={handleEmergencyTrigger} />
       </div>
     </div>
   );

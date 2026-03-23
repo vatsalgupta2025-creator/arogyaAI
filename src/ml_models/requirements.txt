@@ -25,3 +25,6 @@ great-expectations>=0.17.0
 
 # For model monitoring
 mlflow>=2.8.0
+
+# For PhysioNet data download
+wfdb>=4.1.0
