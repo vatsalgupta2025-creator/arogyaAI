@@ -20,7 +20,7 @@ export default function LoadingScreen() {
         key="loading"
         exit={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }}
         transition={{ duration: 1, ease: 'easeInOut' }}
-        className="fixed inset-0 z-[9999] bg-gradient-to-b from-black via-slate-900 to-black flex flex-col items-center justify-center overflow-hidden font-body"
+        className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center overflow-hidden font-body"
       >
         {/* Ambient Background Effects - No external video dependency */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -38,9 +38,15 @@ export default function LoadingScreen() {
             transition={{ duration: 1, ease: "easeOut" }}
             className="mb-8"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#goldGrad)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-16 h-16 drop-shadow-[0_0_15px_rgba(251,191,36,0.6)]">
+            {/* Golden Heart Icon - Arogya AI Brand */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="url(#goldHeartGrad)"
+              className="w-20 h-20 drop-shadow-[0_0_25px_rgba(251,191,36,0.7)]"
+            >
               <defs>
-                <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+                <linearGradient id="goldHeartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#fef08a" />
                   <stop offset="50%" stopColor="#fbbf24" />
                   <stop offset="100%" stopColor="#d97706" />
@@ -52,7 +58,7 @@ export default function LoadingScreen() {
 
           <h1 className="text-7xl md:text-8xl lg:text-[8rem] font-heading italic tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-br from-yellow-200 via-amber-400 to-amber-600 drop-shadow-[0_0_30px_rgba(251,191,36,0.4)] relative">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-[150%] animate-[shimmer_3s_infinite]" style={{ WebkitBackgroundClip: 'text', backgroundClip: 'text' }} />
-            <BlurText text="Arogya" delay={0.3} />
+            <BlurText text="Arogya AI" delay={0.3} />
           </h1>
 
           <motion.p

@@ -9,17 +9,30 @@ export default function LandingPage() {
 
   return (
     <div className="bg-black text-white min-h-screen font-body overflow-x-hidden relative selection:bg-white/20">
-      
+
       {/* SECTION 1 — NAVBAR */}
       <nav className="fixed top-4 left-0 right-0 z-50 flex justify-center px-6">
         <div className="liquid-glass rounded-full px-2 py-2 flex items-center justify-between w-full max-w-5xl">
-          <div className="flex items-center space-x-2 pl-4 text-cyan-400">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+          <div className="flex items-center space-x-2 pl-4">
+            {/* Golden Heart Logo - Arogya AI */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="url(#goldHeartNav)"
+              className="w-8 h-8 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]"
+            >
+              <defs>
+                <linearGradient id="goldHeartNav" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#fef08a" />
+                  <stop offset="50%" stopColor="#fbbf24" />
+                  <stop offset="100%" stopColor="#d97706" />
+                </linearGradient>
+              </defs>
               <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
             </svg>
-            <span className="font-heading italic font-bold text-xl tracking-tight leading-none mt-1 text-white">VitalAI</span>
+            <span className="font-heading italic font-bold text-xl tracking-tight leading-none mt-1 text-white">Arogya AI</span>
           </div>
-          
+
           <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-white/80">
             <a href="#" className="hover:text-cyan-400 transition-colors">Platform</a>
             <a href="#" className="hover:text-cyan-400 transition-colors">Methodology</a>
@@ -27,7 +40,7 @@ export default function LandingPage() {
             <a href="#" className="hover:text-cyan-400 transition-colors">Security</a>
           </div>
 
-          <button 
+          <button
             onClick={() => navigate('/dashboard')}
             className="bg-white text-black font-medium text-sm rounded-full px-5 py-2 flex items-center gap-1 hover:scale-105 transition-transform"
           >
@@ -38,7 +51,7 @@ export default function LandingPage() {
 
       {/* SECTION 2 — HERO */}
       <section className="relative h-[1000px] bg-black overflow-hidden flex flex-col items-center pt-[150px]">
-        {/* Background Video */}
+        {/* Background Video with Fallback */}
         <div className="absolute top-[20%] w-full h-auto z-0 flex justify-center opacity-80 pointer-events-none mix-blend-screen">
           <video
             src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260307_083826_e938b29f-a43a-41ec-a153-3d4730578ab8.mp4"
@@ -47,17 +60,22 @@ export default function LandingPage() {
             muted
             playsInline
             className="w-full max-w-6xl object-contain"
-            poster="/images/hero_bg.jpeg"
+            onError={(e) => {
+              // Fallback: hide video on error and show gradient instead
+              (e.target as HTMLVideoElement).style.display = 'none';
+            }}
           />
+          {/* Fallback gradient when video fails */}
+          <div className="absolute inset-0 w-full h-full bg-gradient-to-b from-cyan-500/10 via-transparent to-amber-500/10 hidden" />
         </div>
-        
+
         {/* Overlays */}
         <div className="absolute inset-0 bg-black/5 z-0 pointer-events-none" />
         <div className="absolute bottom-0 left-0 right-0 z-[1] h-[300px] bg-gradient-to-b from-transparent to-black pointer-events-none" />
 
         {/* Content */}
         <div className="relative z-10 w-full max-w-5xl px-6 flex flex-col items-center text-center">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -72,7 +90,7 @@ export default function LandingPage() {
             <BlurText text="Clinical Intelligence Reimagined" delay={0.2} />
           </h1>
 
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, filter: 'blur(10px)', y: 20 }}
             animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
             transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
@@ -81,13 +99,13 @@ export default function LandingPage() {
             Continuous multi-modal monitoring. Predictive trajectory forecasts. Built to amplify clinical intuition, not replace it.
           </motion.p>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.1, ease: "easeOut" }}
             className="flex flex-col sm:flex-row items-center gap-4"
           >
-            <button 
+            <button
               onClick={() => navigate('/dashboard')}
               className="liquid-glass-strong rounded-full px-8 py-4 text-white font-medium flex items-center gap-2 hover:bg-white/10 transition-colors"
             >
@@ -134,7 +152,7 @@ export default function LandingPage() {
           <p className="text-white/60 font-light text-base md:text-lg max-w-2xl mx-auto mb-10">
             Focus on your patient. Our AI analyzes thousands of temporal data points per minute—detecting subtle clinical decompensation hours before it happens.
           </p>
-          <button 
+          <button
             onClick={() => navigate('/dashboard')}
             className="liquid-glass-strong rounded-full px-6 py-3 text-white font-medium flex items-center gap-2 hover:scale-105 transition-transform"
           >
@@ -232,8 +250,8 @@ export default function LandingPage() {
       <section className="relative w-full py-32 px-6 overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 z-0 opacity-40 mix-blend-screen pointer-events-none">
           <div className="absolute top-0 left-0 right-0 h-[200px] bg-gradient-to-b from-black to-transparent z-10" />
-          <HLSVideo 
-            src="https://stream.mux.com/NcU3HlHeF7CUL86azTTzpy3Tlb00d6iF3BmCdFslMJYM.m3u8" 
+          <HLSVideo
+            src="https://stream.mux.com/NcU3HlHeF7CUL86azTTzpy3Tlb00d6iF3BmCdFslMJYM.m3u8"
             style={{ filter: 'saturate(0)' }}
           />
           <div className="absolute bottom-0 left-0 right-0 h-[200px] bg-gradient-to-t from-black to-transparent z-10" />
@@ -303,7 +321,7 @@ export default function LandingPage() {
             <button className="liquid-glass-strong rounded-full px-8 py-4 text-white font-medium hover:bg-white/10 transition-colors">
               Schedule Demo
             </button>
-            <button 
+            <button
               onClick={() => navigate('/dashboard')}
               className="bg-white text-black rounded-full px-8 py-4 font-medium hover:scale-105 transition-transform"
             >
@@ -313,7 +331,7 @@ export default function LandingPage() {
         </div>
 
         <footer className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between text-white/40 text-xs gap-4">
-          <div>© 2026 VitalAI Medical Systems. All rights reserved. FDA Cleared Class II.</div>
+          <div>© 2026 Arogya AI Medical Systems. All rights reserved. FDA Cleared Class II.</div>
           <div className="flex gap-6">
             <a href="#" className="hover:text-white transition-colors">Privacy</a>
             <a href="#" className="hover:text-white transition-colors">Terms</a>
