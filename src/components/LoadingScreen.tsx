@@ -20,24 +20,19 @@ export default function LoadingScreen() {
         key="loading"
         exit={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }}
         transition={{ duration: 1, ease: 'easeInOut' }}
-        className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center overflow-hidden font-body"
+        className="fixed inset-0 z-[9999] bg-gradient-to-b from-black via-slate-900 to-black flex flex-col items-center justify-center overflow-hidden font-body"
       >
-        {/* Flower UI Background Video */}
-        <div className="absolute inset-0 z-0 opacity-70 mix-blend-screen pointer-events-none">
-          <video
-            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260307_083826_e938b29f-a43a-41ec-a153-3d4730578ab8.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black/30" />
+        {/* Ambient Background Effects - No external video dependency */}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+          {/* Animated gradient orbs */}
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px] animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-yellow-500/8 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-amber-500/5 to-transparent rounded-full" />
         </div>
 
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: "easeOut" }}
@@ -77,7 +72,7 @@ export default function LoadingScreen() {
             className="mt-16 flex flex-col items-center gap-4"
           >
             <div className="w-48 h-1 bg-white/10 rounded-full overflow-hidden">
-              <motion.div 
+              <motion.div
                 className="h-full bg-gradient-to-r from-amber-400 to-yellow-200"
                 initial={{ width: "0%" }}
                 animate={{ width: "100%" }}
