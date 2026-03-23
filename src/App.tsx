@@ -11,6 +11,7 @@ import Timeline from './pages/Timeline';
 import CaregiverView from './pages/CaregiverView';
 import EquityAudit from './pages/EquityAudit';
 import PersonalBaseline from './pages/PersonalBaseline';
+import AIChatbot from './pages/AIChatbot';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="caregiver" element={<CaregiverView />} />
           <Route path="equity" element={<EquityAudit />} />
           <Route path="baseline" element={<PersonalBaseline />} />
+          <Route path="chatbot" element={<AIChatbot />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

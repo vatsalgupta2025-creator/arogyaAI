@@ -2,13 +2,14 @@ import { NavLink } from 'react-router-dom';
 import { useRole, Role } from '../hooks/RoleContext';
 import {
   Activity, TrendingUp, Stethoscope, AlertTriangle,
-  FileText, Clock, Users, ShieldCheck, Sliders, Heart, ChevronLeft, ChevronRight
+  FileText, Clock, Users, ShieldCheck, Sliders, ChevronLeft, ChevronRight, Bot
 } from 'lucide-react';
 import { useState } from 'react';
 
 const navItems = [
   { path: '/dashboard', label: 'Vitals Overview', icon: <Activity size={18} />, end: true },
   { path: '/dashboard/trajectory', label: 'Trajectory Forecast', icon: <TrendingUp size={18} /> },
+  { path: '/dashboard/chatbot', label: 'AI Health Copilot', icon: <Bot size={18} /> },
   { path: '/dashboard/diagnosis', label: 'Differential Dx', icon: <Stethoscope size={18} /> },
   { path: '/dashboard/sepsis', label: 'Sepsis Warning', icon: <AlertTriangle size={18} /> },
   { path: '/dashboard/reports', label: 'Medical Reports', icon: <FileText size={18} /> },

@@ -2,8 +2,14 @@
   "hash": "b9da27a8",
   "configHash": "4942658e",
   "lockfileHash": "4eae6fc3",
-  "browserHash": "70386a7e",
+  "browserHash": "15ff60f4",
   "optimized": {
+    "@google/generative-ai": {
+      "src": "../../node_modules/.pnpm/@google+generative-ai@0.24.1/node_modules/@google/generative-ai/dist/index.mjs",
+      "file": "@google_generative-ai.js",
+      "fileHash": "bfd319ae",
+      "needsInterop": false
+    },
     "clsx": {
       "src": "../../node_modules/.pnpm/clsx@2.1.1/node_modules/clsx/dist/clsx.mjs",
       "file": "clsx.js",
@@ -13,7 +19,7 @@
     "framer-motion": {
       "src": "../../node_modules/.pnpm/framer-motion@12.38.0_react_c6850c7a3f6ac082229dee387470c1fc/node_modules/framer-motion/dist/es/index.mjs",
       "file": "framer-motion.js",
-      "fileHash": "a5e832a6",
+      "fileHash": "089c50c5",
       "needsInterop": false
     },
     "hls.js": {
@@ -31,13 +37,19 @@
     "react-dom/client": {
       "src": "../../node_modules/.pnpm/react-dom@19.2.4_react@19.2.4/node_modules/react-dom/client.js",
       "file": "react-dom_client.js",
-      "fileHash": "08fc0459",
+      "fileHash": "10f664dc",
       "needsInterop": true
+    },
+    "react-markdown": {
+      "src": "../../node_modules/.pnpm/react-markdown@10.1.0_@types+react@19.2.14_react@19.2.4/node_modules/react-markdown/index.js",
+      "file": "react-markdown.js",
+      "fileHash": "0f87fed1",
+      "needsInterop": false
     },
     "react-router-dom": {
       "src": "../../node_modules/.pnpm/react-router-dom@7.13.1_rea_51be5742dbbdbf36bac0195d0bbde42d/node_modules/react-router-dom/dist/index.mjs",
       "file": "react-router-dom.js",
-      "fileHash": "f3ad822f",
+      "fileHash": "979f8e3a",
       "needsInterop": false
     },
     "react": {
@@ -55,7 +67,7 @@
     "recharts": {
       "src": "../../node_modules/.pnpm/recharts@3.8.0_@types+react_234fbed224700069ae76a3d667c4fc1d/node_modules/recharts/es6/index.js",
       "file": "recharts.js",
-      "fileHash": "68381a1f",
+      "fileHash": "415b07ad",
       "needsInterop": false
     },
     "tailwind-merge": {
@@ -66,12 +78,16 @@
     }
   },
   "chunks": {
+    "jsx-runtime-DpoVkmHq": {
+      "file": "jsx-runtime-DpoVkmHq.js",
+      "isDynamicEntry": false
+    },
     "react--WRKu3Vm": {
       "file": "react--WRKu3Vm.js",
       "isDynamicEntry": false
     },
-    "react-dom-C8nfHGDw": {
-      "file": "react-dom-C8nfHGDw.js",
+    "react-dom-j8pl7fDK": {
+      "file": "react-dom-j8pl7fDK.js",
       "isDynamicEntry": false
     }
   }

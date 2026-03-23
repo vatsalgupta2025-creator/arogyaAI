@@ -51,7 +51,7 @@ export default function TopBar({ stabilityScore, alertCount }: TopBarProps) {
 
       {/* Center: Stability */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <StatusBadge status={overallStatus} label={`Stability: ${stabilityScore}%`} size="md" />
+        <StatusBadge status={overallStatus} label={`Stability: ${Math.round(stabilityScore)}%`} size="md" />
       </div>
 
       {/* Right: Alerts + Role */}
