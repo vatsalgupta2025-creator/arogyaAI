@@ -16,7 +16,7 @@ export default function TopBar({ stabilityScore, alertCount }: TopBarProps) {
   return (
     <header style={{
       height: 64,
-      background: 'rgba(255, 255, 255, 0.04)',
+      background: 'rgba(6, 10, 20, 0.9)',
       borderBottom: '1px solid var(--border-glass)',
       backdropFilter: 'blur(20px)',
       display: 'flex',
@@ -25,7 +25,7 @@ export default function TopBar({ stabilityScore, alertCount }: TopBarProps) {
       padding: '0 28px',
       position: 'sticky',
       top: 0,
-      zIndex: 40,
+      zIndex: 50,
     }}>
       {/* Left: Patient info */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>

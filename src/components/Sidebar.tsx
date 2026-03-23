@@ -30,10 +30,10 @@ export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <aside className="hidden md:flex flex-col border-r h-full sidebar-glassmorphism" style={{
+    <aside style={{
       width: collapsed ? 72 : 280,
       minHeight: '100vh',
-      background: 'rgba(255, 255, 255, 0.04)',
+      background: 'rgba(6, 10, 20, 0.95)',
       borderRight: '1px solid var(--border-glass)',
       backdropFilter: 'blur(20px)',
       display: 'flex',
@@ -42,7 +42,7 @@ export default function Sidebar() {
       position: 'fixed',
       top: 0,
       left: 0,
-      zIndex: 50,
+      zIndex: 100,
       overflow: 'hidden',
     }}>
       {/* Logo */}

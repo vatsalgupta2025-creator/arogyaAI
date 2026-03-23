@@ -1,0 +1,78 @@
+{
+  "hash": "b9da27a8",
+  "configHash": "4942658e",
+  "lockfileHash": "4eae6fc3",
+  "browserHash": "70386a7e",
+  "optimized": {
+    "clsx": {
+      "src": "../../node_modules/.pnpm/clsx@2.1.1/node_modules/clsx/dist/clsx.mjs",
+      "file": "clsx.js",
+      "fileHash": "8354ab12",
+      "needsInterop": false
+    },
+    "framer-motion": {
+      "src": "../../node_modules/.pnpm/framer-motion@12.38.0_react_c6850c7a3f6ac082229dee387470c1fc/node_modules/framer-motion/dist/es/index.mjs",
+      "file": "framer-motion.js",
+      "fileHash": "a5e832a6",
+      "needsInterop": false
+    },
+    "hls.js": {
+      "src": "../../node_modules/.pnpm/hls.js@1.6.15/node_modules/hls.js/dist/hls.mjs",
+      "file": "hls__js.js",
+      "fileHash": "52a555f4",
+      "needsInterop": false
+    },
+    "lucide-react": {
+      "src": "../../node_modules/.pnpm/lucide-react@0.577.0_react@19.2.4/node_modules/lucide-react/dist/esm/lucide-react.js",
+      "file": "lucide-react.js",
+      "fileHash": "03cafdd2",
+      "needsInterop": false
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/.pnpm/react-dom@19.2.4_react@19.2.4/node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "08fc0459",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/.pnpm/react-router-dom@7.13.1_rea_51be5742dbbdbf36bac0195d0bbde42d/node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "f3ad822f",
+      "needsInterop": false
+    },
+    "react": {
+      "src": "../../node_modules/.pnpm/react@19.2.4/node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "f1522121",
+      "needsInterop": true
+    },
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/.pnpm/react@19.2.4/node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "a0561992",
+      "needsInterop": true
+    },
+    "recharts": {
+      "src": "../../node_modules/.pnpm/recharts@3.8.0_@types+react_234fbed224700069ae76a3d667c4fc1d/node_modules/recharts/es6/index.js",
+      "file": "recharts.js",
+      "fileHash": "68381a1f",
+      "needsInterop": false
+    },
+    "tailwind-merge": {
+      "src": "../../node_modules/.pnpm/tailwind-merge@3.5.0/node_modules/tailwind-merge/dist/bundle-mjs.mjs",
+      "file": "tailwind-merge.js",
+      "fileHash": "a7c6afd1",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "react--WRKu3Vm": {
+      "file": "react--WRKu3Vm.js",
+      "isDynamicEntry": false
+    },
+    "react-dom-C8nfHGDw": {
+      "file": "react-dom-C8nfHGDw.js",
+      "isDynamicEntry": false
+    }
+  }
+}
