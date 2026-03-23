@@ -386,6 +386,156 @@ def analyze_csvs():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Load the trained vitals risk model at startup
+import pickle
+vitals_risk_model = None
+vitals_risk_model_path = os.path.join(os.path.dirname(__file__), 'vitals_risk_model.pkl')
+if os.path.exists(vitals_risk_model_path):
+    try:
+        with open(vitals_risk_model_path, 'rb') as f:
+            vitals_risk_model = pickle.load(f)
+        print("Loaded trained vitals risk model successfully!")
+    except Exception as e:
+        print(f"Failed to load vitals risk model: {e}")
+
+# Load the comprehensive sepsis model at startup
+sepsis_comprehensive_model = None
+sepsis_model_path = os.path.join(os.path.dirname(__file__), 'sepsis_comprehensive_model.pkl')
+if os.path.exists(sepsis_model_path):
+    try:
+        with open(sepsis_model_path, 'rb') as f:
+            sepsis_comprehensive_model = pickle.load(f)
+        print(f"Loaded comprehensive sepsis model! Accuracy: {sepsis_comprehensive_model['accuracy']:.4f}, ROC-AUC: {sepsis_comprehensive_model['roc_auc']:.4f}")
+    except Exception as e:
+        print(f"Failed to load sepsis comprehensive model: {e}")
+
+@app.route('/api/sepsis-predict', methods=['POST'])
+def predict_sepsis():
+    """
+    Use the trained comprehensive sepsis model to predict sepsis risk.
+    """
+    try:
+        if sepsis_comprehensive_model is None:
+            return jsonify({"error": "Sepsis model not loaded"}), 500
+        
+        data = request.json
+        
+        # Extract features from request (map frontend names to model features)
+        features = {
+            'age': float(data.get('age', 50)),
+            'bmi': float(data.get('bmi', 25)),
+            'hr': float(data.get('heart_rate', 75)),
+            'spo2': float(data.get('spo2', 98)),
+            'temp': float(data.get('temperature', 37)),
+            'rr': float(data.get('respiratory_rate', 14)),
+            'sbp': float(data.get('sbp', 120)),
+            'dbp': float(data.get('dbp', 80)),
+            'lactate': float(data.get('lactate', 1.0)),
+            'wbc': float(data.get('wbc', 7.0)),
+            'crp': float(data.get('crp', 5.0)),
+            'procalcitonin': float(data.get('procalcitonin', 0.1)),
+            'hr_slope_3h': float(data.get('hr_slope_3h', 0)),
+            'temp_slope_3h': float(data.get('temp_slope_3h', 0)),
+            'spo2_slope_3h': float(data.get('spo2_slope_3h', 0)),
+            'qsofa_score': float(data.get('qsofa_score', 0)),
+            'sepsis_history': float(data.get('sepsis_history', 0)),
+            'diabetes_flag': float(data.get('diabetes_flag', 0)),
+            'hrv_dfa': float(data.get('hrv_dfa', 0.9)),
+        }
+        
+        # Create feature vector
+        import pandas as pd
+        feature_cols = sepsis_comprehensive_model['feature_cols']
+        X = pd.DataFrame([features])[feature_cols]
+        
+        # Predict
+        prediction = sepsis_comprehensive_model['model'].predict(X)[0]
+        probability = sepsis_comprehensive_model['model'].predict_proba(X)[0]
+        
+        # Get risk percentage
+        sepsis_probability = float(probability[1]) * 100  # Probability of sepsis (class 1)
+        
+        # Determine severity
+        if sepsis_probability >= 70:
+            severity = "Critical"
+            recommendation = "Immediate medical attention required. Consider ICU evaluation."
+        elif sepsis_probability >= 40:
+            severity = "High"
+            recommendation = "Urgent medical evaluation recommended. Monitor closely."
+        elif sepsis_probability >= 20:
+            severity = "Moderate"
+            recommendation = "Schedule medical consultation. Watch for symptom progression."
+        else:
+            severity = "Low"
+            recommendation = "Continue monitoring. Maintain healthy lifestyle."
+        
+        return jsonify({
+            "sepsis_risk": sepsis_probability,
+            "prediction": "Sepsis" if prediction == 1 else "No Sepsis",
+            "severity": severity,
+            "recommendation": recommendation,
+            "confidence": float(max(probability)) * 100,
+            "model_accuracy": sepsis_comprehensive_model['accuracy'],
+            "model_auc": sepsis_comprehensive_model['roc_auc']
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/vitals-risk', methods=['POST'])
+def predict_vitals_risk():
+    """
+    Use the trained HistGradientBoosting model to predict risk category.
+    """
+    try:
+        if vitals_risk_model is None:
+            return jsonify({"error": "Model not loaded"}), 500
+        
+        data = request.json
+        
+        # Extract features from request
+        features = {
+            'Heart Rate': float(data.get('heart_rate', 70)),
+            'Respiratory Rate': float(data.get('respiratory_rate', 14)),
+            'Body Temperature': float(data.get('temperature', 37.0)),
+            'Oxygen Saturation': float(data.get('spo2', 98)),
+            'Systolic Blood Pressure': float(data.get('sbp', 120)),
+            'Diastolic Blood Pressure': float(data.get('dbp', 80)),
+            'Age': float(data.get('age', 30)),
+            'Weight (kg)': float(data.get('weight', 70)),
+            'Height (m)': float(data.get('height', 1.7)),
+            'Derived_HRV': float(data.get('hrv', 50)),
+            'Derived_Pulse_Pressure': float(data.get('pulse_pressure', 40)),
+            'Derived_BMI': float(data.get('bmi', 24)),
+            'Derived_MAP': float(data.get('map', 93)),
+        }
+        
+        # Gender encoding
+        gender = data.get('gender', 'Male')
+        gender_encoded = vitals_risk_model['gender_encoder'].transform([gender])[0]
+        features['Gender_Encoded'] = gender_encoded
+        
+        # Create feature vector
+        import pandas as pd
+        feature_cols = vitals_risk_model['feature_cols']
+        X = pd.DataFrame([features])[feature_cols]
+        
+        # Predict
+        prediction = vitals_risk_model['model'].predict(X)[0]
+        probability = vitals_risk_model['model'].predict_proba(X)[0]
+        
+        # Decode prediction
+        predicted_risk = vitals_risk_model['target_encoder'].inverse_transform([prediction])[0]
+        confidence = float(max(probability) * 100)
+        
+        return jsonify({
+            "prediction": predicted_risk,
+            "confidence": confidence,
+            "risk_level": "High" if predicted_risk == "High Risk" else "Low",
+            "features": features
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
     print("Starting MedFlow ML Python Backend on port 5000...")
     app.run(port=5000, debug=True, use_reloader=False)

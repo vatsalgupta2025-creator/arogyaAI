@@ -8,7 +8,7 @@ import {
   Globe, X, Image as ImageIcon, FileText, Sparkles, User, FileDown
 } from 'lucide-react';
 
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "AIzaSyAFO76eHf4kBLpx-VUyjAzspxd8gtnyuXU";
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "AIzaSyC7fcJBv24IhMTAVhAua1o01EYQhjapNGQ";
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 const LANGUAGES = [
@@ -215,16 +215,18 @@ If describing symptoms, provide: 1) Brief analysis 2) Daily routine 3) Diet plan
 If a general question, answer helpfully. Be professional, caring, use emojis sparingly.`;
 
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
       const result = await model.generateContent(prompt);
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(), role: 'assistant',
         content: result.response.text(), timestamp: new Date(),
       }]);
-    } catch {
+    } catch (error: any) {
+      console.error("AI Chat Error:", error);
+      const errorMsg = error?.message || error?.statusText || 'Unknown error';
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(), role: 'assistant',
-        content: '⚠️ Sorry, I encountered an error. Please try again or check your API quota.',
+        content: `⚠️ Sorry, I encountered an error: ${errorMsg}. Please try again or check your API quota.`,
         timestamp: new Date(),
       }]);
     } finally { setIsGenerating(false); }

@@ -1,5 +1,5 @@
 import { useRole } from '../hooks/RoleContext';
-import { PATIENT } from '../data/patient';
+import { usePatient } from '../hooks/PatientContext';
 import { Bell, User } from 'lucide-react';
 import StatusBadge from './StatusBadge';
 import ThemeToggle from './ThemeToggle';
@@ -11,6 +11,7 @@ interface TopBarProps {
 
 export default function TopBar({ stabilityScore, alertCount }: TopBarProps) {
   const { roleLabel, roleColor } = useRole();
+  const { patient } = usePatient();
 
   const overallStatus: 'normal' | 'warning' | 'critical' = stabilityScore >= 80 ? 'normal' : stabilityScore >= 50 ? 'warning' : 'critical';
 
@@ -43,9 +44,15 @@ export default function TopBar({ stabilityScore, alertCount }: TopBarProps) {
           <User size={18} style={{ color: roleColor }} />
         </div>
         <div>
-          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{PATIENT.name}</div>
-          <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-            {PATIENT.age}y • {PATIENT.sex} • {PATIENT.id} • {PATIENT.conditions.slice(0, 2).join(', ')}
+          <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+            {patient?.name || 'Guest User'}
+          </div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
+            <span>{patient?.age ? `${patient.age}y` : '--y'}</span>
+            <span style={{ opacity: 0.5 }}>•</span>
+            <span>{patient?.gender || '--'}</span>
+            <span style={{ opacity: 0.5 }}>•</span>
+            <span style={{ color: 'var(--accent-cyan)' }}>{patient?.disease || 'No known conditions'}</span>
           </div>
         </div>
       </div>

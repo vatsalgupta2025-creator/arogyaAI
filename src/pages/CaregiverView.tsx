@@ -2,16 +2,19 @@ import { useOutletContext } from 'react-router-dom';
 import { Heart, Moon, PhoneCall, ShieldCheck } from 'lucide-react';
 import { VitalsState } from '../hooks/useVitals';
 import GlassCard from '../components/GlassCard';
+import { usePatient } from '../hooks/PatientContext';
 
 export default function CaregiverView() {
   const { current, stabilityScore } = useOutletContext<VitalsState>();
+  const { patient } = usePatient();
+  const patientName = patient?.name || 'Patient';
 
   if (!current) return null;
 
   const getMessage = () => {
-    if (stabilityScore > 80) return "Sarah's rhythm is perfectly stable. Rest easy.";
-    if (stabilityScore > 50) return "Sarah's body is working slightly harder than usual. The system is monitoring her closely.";
-    return "We've detected a significant shift. Dr. Sharma has been notified. We recommend giving Sarah a gentle, non-urgent call when you are free.";
+    if (stabilityScore > 80) return `${patientName}'s rhythm is perfectly stable. Rest easy.`;
+    if (stabilityScore > 50) return `${patientName}'s body is working slightly harder than usual. The system is monitoring her closely.`;
+    return `We've detected a significant shift. Dr. Sharma has been notified. We recommend giving ${patientName} a gentle, non-urgent call when you are free.`;
   };
 
   // Mock caregiver stress data
@@ -26,7 +29,7 @@ export default function CaregiverView() {
           Family Updates
         </h1>
         <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: 16 }}>
-          Keeping you connected to Sarah's wellbeing.
+          Keeping you connected to {patientName}'s wellbeing.
         </p>
       </div>
 

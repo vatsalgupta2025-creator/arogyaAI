@@ -5,10 +5,12 @@ import { VitalsState } from '../hooks/useVitals';
 import VitalCard from '../components/VitalCard';
 import GlassCard from '../components/GlassCard';
 import { useRole } from '../hooks/RoleContext';
+import { usePatient } from '../hooks/PatientContext';
 
 export default function VitalsOverview() {
   const { current, history, anomalies } = useOutletContext<VitalsState>();
   const { role } = useRole();
+  const { patient } = usePatient();
 
   if (!current) return null;
 
@@ -22,9 +24,9 @@ export default function VitalsOverview() {
 
   // Generate synthetic HRV & Stability data for the advanced chart
   const advancedMetrics = history.slice(-20).map((r, i) => ({
-    time: `-${20-i}m`,
+    time: `-${20 - i}m`,
     hrv: Math.round(50 + Math.sin(i) * 10 + (r.hr > 90 ? -15 : 10)),
-    stability: Math.max(0, 100 - (r.hr > 100 ? 20 : 0) - (r.spo2 < 95 ? 15 : 0) + Math.sin(i*2)*5)
+    stability: Math.max(0, 100 - (r.hr > 100 ? 20 : 0) - (r.spo2 < 95 ? 15 : 0) + Math.sin(i * 2) * 5)
   }));
 
   return (
@@ -103,24 +105,24 @@ export default function VitalsOverview() {
             <BrainCircuit size={20} color="var(--accent-cyan)" />
             <h3 style={{ margin: 0, fontSize: 18, fontWeight: 600 }}>Multi-Modal Context Analysis</h3>
           </div>
-          
+
           <div style={{ height: 240, width: '100%', marginBottom: 16 }}>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={advancedMetrics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorHrv" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--accent-cyan)" stopOpacity={0.4}/>
-                    <stop offset="95%" stopColor="var(--accent-cyan)" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="var(--accent-cyan)" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="var(--accent-cyan)" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="colorStability" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--accent-emerald)" stopOpacity={0.4}/>
-                    <stop offset="95%" stopColor="var(--accent-emerald)" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="var(--accent-emerald)" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="var(--accent-emerald)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
                 <XAxis dataKey="time" stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} />
                 <YAxis stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{ background: 'rgba(15,23,42,0.9)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, backdropFilter: 'blur(10px)' }}
                   itemStyle={{ fontSize: 13 }}
                   labelStyle={{ display: 'none' }}
@@ -138,7 +140,7 @@ export default function VitalsOverview() {
                 <div><strong style={{ color: 'var(--text-primary)' }}>Context:</strong> Post-meal sitting</div>
               </div>
             ) : role === 'caregiver' ? (
-              <p style={{ margin: 0 }}>Sarah is resting. Her heart rate variability indicates steady recovery.</p>
+              <p style={{ margin: 0 }}>{patient?.name || 'Patient'} is resting. Their heart rate variability indicates steady recovery.</p>
             ) : (
               <p style={{ margin: 0 }}>Your body is currently relaxed. System is learning your resting patterns.</p>
             )}
@@ -188,7 +190,7 @@ export default function VitalsOverview() {
                 </div>
               ))
             )}
-            
+
             {/* Synthetic baseline reasoning card to always show something */}
             {anomalies.filter(a => a.severity !== 'normal').length < 2 && (
               <div style={{

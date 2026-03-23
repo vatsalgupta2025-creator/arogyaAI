@@ -11,7 +11,7 @@ export default function LoadingScreen() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate('/dashboard');
+      navigate('/patient-input');
     }, 4000);
     return () => clearTimeout(timer);
   }, [navigate]);
